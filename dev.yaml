@@ -1,0 +1,23 @@
+services:
+  app:
+    build: .
+    environment:
+      MY_VAR: dev
+      DATABASE_URL: postgres://dev:example@database:5432/dev
+    depends_on:
+      - database
+  database:
+    image: 'postgres:latest'
+    ports:
+      - 15432:5432
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: example
+    volumes:
+      - ./db-data/:/var/lib/postgresql/data/
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
